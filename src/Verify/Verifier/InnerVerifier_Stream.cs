@@ -134,6 +134,7 @@ partial class InnerVerifier
         var queue = new Queue<Target>();
         queue.Enqueue(new(extension, stream));
 
+        var conversionContext = new ConversionContext(settings.Context, _=>settings.AsJson(counter, _));
         while (queue.Count > 0)
         {
             var target = queue.Dequeue();
@@ -145,7 +146,9 @@ partial class InnerVerifier
             }
 
             var targetStream = target.StreamData;
-            var result = await conversion(targetStream, settings.Context);
+            var result = await conversion(
+                targetStream,
+                conversionContext);
             if (result.Cleanup != null)
             {
                 cleanup += result.Cleanup;

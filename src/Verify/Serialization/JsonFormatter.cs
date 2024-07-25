@@ -1,6 +1,6 @@
 ﻿static class JsonFormatter
 {
-    public static StringBuilder AsJson(VerifySettings settings, Counter counter, object value)
+    public static StringBuilder AsJson(this VerifySettings settings, Counter counter, object value)
     {
         var builder = new StringBuilder();
         using var writer = new VerifyJsonWriter(builder, settings, counter);

@@ -64,7 +64,8 @@ partial class InnerVerifier
 
         if (VerifierSettings.TryGetTypedConverter(target, settings, out var converter))
         {
-            var result = await converter.Conversion(target, settings.Context);
+            var context = new ConversionContext(settings.Context, _=>settings.AsJson(counter, _));
+            var result = await converter.Conversion(target, context);
             return await VerifyInner(result.Info, result.Cleanup, result.Targets, true);
         }
 
