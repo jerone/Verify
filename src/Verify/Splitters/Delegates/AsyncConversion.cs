@@ -4,10 +4,10 @@ public delegate Task<ConversionResult> AsyncConversion<in T>(T target, Conversio
 
 public delegate Task<ConversionResult> AsyncConversion(object target, ConversionContext context);
 
-public class ConversionContext(IReadOnlyDictionary<string, object> context, Func<object, StringBuilder> serailize) :
+public class ConversionContext(IReadOnlyDictionary<string, object> context, Func<object, StringBuilder> serialize) :
     IReadOnlyDictionary<string, object>
 {
-    public Func<object, StringBuilder> Serailize { get; } = serailize;
+    public Func<object, StringBuilder> Serialize { get; } = serialize;
 
     public IEnumerator<KeyValuePair<string, object>> GetEnumerator() =>
         context.GetEnumerator();
