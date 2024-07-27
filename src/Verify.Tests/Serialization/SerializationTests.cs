@@ -1795,6 +1795,13 @@ public class SerializationTests
             altTempPathTrailing = altTempPath + Path.AltDirectorySeparatorChar
         });
     }
+    [Fact]
+    public Task Tmp() =>
+        Verify("""
+               a
+               tmp
+               b
+               """);
 
     [Fact]
     public Task ScrubCurrentDirectory()
