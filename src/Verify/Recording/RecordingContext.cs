@@ -12,12 +12,19 @@
     }
 
     RecordingState state = RecordingState.Pending;
-    public bool Paused => state == RecordingState.Paused;
+    public bool IsPaused => state == RecordingState.Paused;
+    public bool IsRecording => state == RecordingState.Recording;
+    public bool IsPending => state == RecordingState.Pending;
 
     public void Add(string name, object item)
     {
         Guard.NotNullOrEmpty(name);
-        if (Paused)
+        if (IsPending)
+        {
+            throw new("Recording.Start must be called before Recording.Add");
+        }
+
+        if (IsPaused)
         {
             return;
         }

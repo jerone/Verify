@@ -38,4 +38,20 @@ public class Tests
                 Property = "Value"
             },
             rawTargets: [new("txt", "TextTarget")]));
+
+    [Tests]
+    public static Test recordingStartInAsync = Runner.TestCase(
+        nameof(recordingStartInAsync),
+        async () =>
+        {
+            await AsyncStart();
+            Recording.Add("name", "value");
+            await Verify(name: nameof(recordingStartInAsync));
+        });
+
+    static async Task AsyncStart()
+    {
+        await Task.Delay(1);
+        Recording.Start();
+    }
 }

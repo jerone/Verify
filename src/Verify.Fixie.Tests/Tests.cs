@@ -73,4 +73,17 @@ public class Tests
     #endregion
 
 #endif
+
+    public async Task RecordingStartInAsync()
+    {
+        await AsyncStart();
+        Recording.Add("name", "value");
+        await Verify();
+    }
+
+    static async Task AsyncStart()
+    {
+        await Task.Delay(1);
+        Recording.Start();
+    }
 }

@@ -150,4 +150,18 @@ public class Tests
         VerifyZip(
             zipPath,
             include: filePath => filePath.FullName.Contains("Doc"));
+
+    [Fact]
+    public async Task RecordingStartInAsync()
+    {
+        await AsyncStart();
+        Recording.Add("name", "value");
+        await Verify();
+    }
+
+    static async Task AsyncStart()
+    {
+        await Task.Delay(1);
+        Recording.Start();
+    }
 }

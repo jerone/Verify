@@ -11,6 +11,20 @@
     }
 
     [Fact]
+    public async Task StartInAsync()
+    {
+        await AsyncStart();
+        Recording.Add("name", "value");
+        await  Verify();
+    }
+
+    static async Task AsyncStart()
+    {
+        await Task.Delay(1);
+        Recording.Start();
+    }
+
+    [Fact]
     public Task Dates()
     {
         Recording.Start();

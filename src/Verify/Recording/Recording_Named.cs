@@ -25,7 +25,7 @@ public static partial class Recording
             return false;
         }
 
-        return !state.Paused;
+        return !state.IsPaused;
     }
 
     public static IReadOnlyCollection<ToAppend> Stop(string identifier)

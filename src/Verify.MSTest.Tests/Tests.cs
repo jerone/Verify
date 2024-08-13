@@ -195,4 +195,18 @@ public partial class Tests
         return VerifyFile(fullPath)
             .UseFileName("customFileName");
     }
+
+    [TestMethod]
+    public async Task RecordingStartInAsync()
+    {
+        await AsyncStart();
+        Recording.Add("name", "value");
+        await Verify();
+    }
+
+    static async Task AsyncStart()
+    {
+        await Task.Delay(1);
+        Recording.Start();
+    }
 }

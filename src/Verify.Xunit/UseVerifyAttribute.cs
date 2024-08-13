@@ -6,8 +6,11 @@ public sealed class UseVerifyAttribute :
 {
     static AsyncLocal<MethodInfo?> local = new();
 
-    public override void Before(MethodInfo info) =>
+    public override void Before(MethodInfo info)
+    {
+        Recording.InitializeState();
         local.Value = info;
+    }
 
     public override void After(MethodInfo info) =>
         local.Value = null;

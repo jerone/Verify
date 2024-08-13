@@ -34,7 +34,7 @@ public static partial class Recording
             return false;
         }
 
-        return !state.Paused;
+        return state.IsRecording;
     }
 
     public static IReadOnlyCollection<ToAppend> Stop()
@@ -52,6 +52,12 @@ public static partial class Recording
         var value = asyncLocal.Value;
 
         if (value == null)
+        {
+            recorded = null;
+            return false;
+        }
+
+        if (value.IsPending)
         {
             recorded = null;
             return false;
@@ -76,17 +82,36 @@ public static partial class Recording
 
     public static IDisposable Start()
     {
+        var context = asyncLocal.Value;
+
+        if (context != null)
+        {
+            if (context.IsPaused || context.IsRecording)
+            {
+                throw new("Recording already started");
+            }
+        }
+        else
+        {
+            context = new();
+            asyncLocal.Value = context;
+        }
+
+        context.Start();
+        return new Disposable();
+    }
+
+    internal static void InitializeState()
+    {
         var value = asyncLocal.Value;
 
         if (value != null)
         {
-            throw new("Recording already started");
+            throw new("Already initialized");
         }
 
         var context = new RecordingContext();
-        context.Start();
         asyncLocal.Value = context;
-        return new Disposable();
     }
 
     class Disposable :

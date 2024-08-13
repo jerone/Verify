@@ -157,4 +157,18 @@ public class Tests
         AreEqual($"Tests.MultipleNewHasAttachment.{Namer.TargetFrameworkNameAndVersion}#00.received.txt", file0);
         AreEqual($"Tests.MultipleNewHasAttachment.{Namer.TargetFrameworkNameAndVersion}#01.received.txt", file1);
     }
+
+    [Test]
+    public async Task RecordingStartInAsync()
+    {
+        await AsyncStart();
+        Recording.Add("name", "value");
+        await Verify();
+    }
+
+    static async Task AsyncStart()
+    {
+        await Task.Delay(1);
+        Recording.Start();
+    }
 }
