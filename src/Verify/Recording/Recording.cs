@@ -83,7 +83,9 @@ public static partial class Recording
             throw new("Recording already started");
         }
 
-        asyncLocal.Value = new();
+        var context = new RecordingContext();
+        context.Start();
+        asyncLocal.Value = context;
         return new Disposable();
     }
 

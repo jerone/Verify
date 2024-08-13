@@ -4,7 +4,15 @@
 
     internal IReadOnlyCollection<ToAppend> Items => items;
 
-    public bool Paused { get; private set; }
+    enum RecordingState
+    {
+        Pending,
+        Recording,
+        Paused
+    }
+
+    RecordingState state = RecordingState.Paused;
+    public bool Paused => state == RecordingState.Paused;
 
     public void Add(string name, object item)
     {
@@ -27,10 +35,13 @@
     }
 
     public void Pause() =>
-        Paused = true;
+        state = RecordingState.Paused;
+
+    public void Start() =>
+        state = RecordingState.Recording;
 
     public void Resume() =>
-        Paused = false;
+        state = RecordingState.Recording;
 
     public void Clear()
     {

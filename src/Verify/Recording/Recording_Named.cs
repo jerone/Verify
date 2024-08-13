@@ -64,7 +64,9 @@ public static partial class Recording
 
     public static IDisposable Start(string identifier)
     {
-        if (!namedState.TryAdd(identifier, new()))
+        var context = new RecordingContext();
+        context.Start();
+        if (!namedState.TryAdd(identifier, context))
         {
             throw new("Recording already started");
         }
