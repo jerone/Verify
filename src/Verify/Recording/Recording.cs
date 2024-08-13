@@ -10,7 +10,7 @@ public static partial class Recording
     public static bool IsIgnored(string name) =>
         ignored.Contains(name);
 
-    static AsyncLocal<State?> asyncLocal = new();
+    static AsyncLocal<RecordingContext?> asyncLocal = new();
 
     public static void Add(string name, object item) =>
         CurrentState()
@@ -62,7 +62,7 @@ public static partial class Recording
         return true;
     }
 
-    static State CurrentState([CallerMemberName] string caller = "")
+    static RecordingContext CurrentState([CallerMemberName] string caller = "")
     {
         var value = asyncLocal.Value;
 
@@ -114,26 +114,4 @@ public static partial class Recording
 
     public static void TryClear() =>
         asyncLocal.Value?.Clear();
-
-    public static IReadOnlyDictionary<string, IReadOnlyList<object>> ToDictionary(this IEnumerable<ToAppend> values)
-    {
-        var dictionary = new Dictionary<string, IReadOnlyList<object>>(StringComparer.OrdinalIgnoreCase);
-
-        foreach (var value in values)
-        {
-            List<object> objects;
-            if (dictionary.TryGetValue(value.Name, out var item))
-            {
-                objects = (List<object>) item;
-            }
-            else
-            {
-                dictionary[value.Name] = objects = [];
-            }
-
-            objects.Add(value.Data);
-        }
-
-        return dictionary;
-    }
 }

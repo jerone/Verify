@@ -1,4 +1,4 @@
-﻿class State
+﻿class RecordingContext
 {
     List<ToAppend> items = [];
 

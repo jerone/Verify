@@ -4,7 +4,7 @@ public static partial class Recording
 {
     // The identifier should be statically unique. For example a fully qualified test name or a GUID.
     // so it is ok for this to be shared state
-    static ConcurrentDictionary<string, State> namedState = new(StringComparer.OrdinalIgnoreCase);
+    static ConcurrentDictionary<string, RecordingContext> namedState = new(StringComparer.OrdinalIgnoreCase);
 
     public static void Add(string identifier, string name, object item) =>
         CurrentStateNamed(identifier)
@@ -52,7 +52,7 @@ public static partial class Recording
         return false;
     }
 
-    static State CurrentStateNamed(string identifier, [CallerMemberName] string caller = "")
+    static RecordingContext CurrentStateNamed(string identifier, [CallerMemberName] string caller = "")
     {
         if (namedState.TryGetValue(identifier, out var state))
         {
