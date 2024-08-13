@@ -5,4 +5,28 @@
     <Using Include="Xunit" />
     <Using Include="VerifyXunit.Verifier" Static="True" />
   </ItemGroup>
+  <PropertyGroup>
+    <VerifyXunit3AttributesFile>VerifyXunit3.Attributes$(MSBuildProjectExtension.Replace('proj', ''))</VerifyXunit3AttributesFile>
+  </PropertyGroup>
+  <Target Name="WriteVerifyXunit3Attributes"
+          Condition="$(Language) == 'VB' or $(Language) == 'C#' or $(Language) == 'F#'"
+          BeforeTargets="BeforeCompile;CoreCompile"
+          Inputs="$(MSBuildAllProjects)"
+          Outputs="$(IntermediateOutputPath)$(VerifyXunit3AttributesFile)">
+    <PropertyGroup>
+      <VerifyXunit3AttributesFilePath>$(IntermediateOutputPath)$(VerifyXunit3AttributesFile)</VerifyXunit3AttributesFilePath>
+    </PropertyGroup>
+    <ItemGroup>
+      <VerifyXunit3Attributes Include="VerifyXunit.UseVerifyAttribute" />
+      <!-- Ensure not part of Compile, as a workaround for https://github.com/dotnet/sdk/issues/114 -->
+      <Compile Remove="$(VerifyXunit3AttributesFilePath)" />
+    </ItemGroup>
+    <WriteCodeFragment AssemblyAttributes="@(VerifyXunit3Attributes)"
+                       Language="$(Language)"
+                       OutputFile="$(VerifyXunit3AttributesFilePath)">
+      <Output TaskParameter="OutputFile" ItemName="Compile" Condition="$(Language) != 'F#'" />
+      <Output TaskParameter="OutputFile" ItemName="CompileBefore" Condition="$(Language) == 'F#'" />
+      <Output TaskParameter="OutputFile" ItemName="FileWrites" />
+    </WriteCodeFragment>
+  </Target>
 </Project>

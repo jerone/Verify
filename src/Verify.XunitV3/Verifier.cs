@@ -1,6 +1,4 @@
-﻿using Xunit.v3;
-
-namespace VerifyXunit;
+﻿namespace VerifyXunit;
 
 public static partial class Verifier
 {
