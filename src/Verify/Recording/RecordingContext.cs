@@ -11,7 +11,7 @@
         Paused
     }
 
-    RecordingState state = RecordingState.Paused;
+    RecordingState state = RecordingState.Pending;
     public bool Paused => state == RecordingState.Paused;
 
     public void Add(string name, object item)
