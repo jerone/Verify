@@ -608,7 +608,7 @@ Verifier.DerivePathInfo(
         typeName: type.Name,
         methodName: method.Name));
 ```
-<sup><a href='/src/Verify.NUnit.Tests/Tests.cs#L8-L14' title='Snippet source file'>snippet source</a> | <a href='#snippet-DerivePathInfoNunit' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Verify.NUnit.Tests/Tests.cs#L9-L15' title='Snippet source file'>snippet source</a> | <a href='#snippet-DerivePathInfoNunit' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 
