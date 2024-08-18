@@ -6,8 +6,13 @@
     [InlineData("\r", "\n")]
     [InlineData("\n", "\n")]
     [InlineData("\n\n", "\n\n")]
+    [InlineData("\n\n\n", "\n\n\n")]
     [InlineData("\r\n", "\n")]
     [InlineData("\r\r", "\n\n")]
+    [InlineData("\r\r\r", "\n\n\n")]
+    [InlineData("\r\r\n", "\n\n")]
+    [InlineData("\r\n\n", "\n\n")]
+    [InlineData("\r\n\r\n", "\n\n")]
     public async Task Run(string input, string expected)
     {
         using var reader = new StringReader(input);
@@ -29,19 +34,26 @@
 
     [Theory]
     [InlineData(1022)]
-  //  [InlineData(1023)]
-  //  [InlineData(1024)]
-   // [InlineData(1025)]
+    [InlineData(1023)]
+    [InlineData(1024)]
+    [InlineData(1025)]
+    [InlineData(1026)]
+    [InlineData(2046)]
+    [InlineData(2047)]
+    [InlineData(2048)]
+    [InlineData(2049)]
+    [InlineData(2050)]
     public async Task Edges(int length)
     {
         var input = new string(' ', length);
-       // using var returnReader = new StringReader(input + "\r");
-       // var returnResult = await IoHelpers.ReadStringBuilderWithFixedLines(returnReader);
-       // Assert.Equal(input + "\n", returnResult.ToString());
 
-        // using var newLineReader = new StringReader(input + "\n");
-        // var newlineResult = await IoHelpers.ReadStringBuilderWithFixedLines(newLineReader);
-        // Assert.Equal(input + "\n", newlineResult.ToString());
+        using var returnReader = new StringReader(input + "\r");
+        var returnResult = await IoHelpers.ReadStringBuilderWithFixedLines(returnReader);
+        Assert.Equal(input + "\n", returnResult.ToString());
+
+        using var newLineReader = new StringReader(input + "\n");
+        var newlineResult = await IoHelpers.ReadStringBuilderWithFixedLines(newLineReader);
+        Assert.Equal(input + "\n", newlineResult.ToString());
 
          using var returnNewLineReader = new StringReader(input + "\r\n");
          var returnNewLineResult = await IoHelpers.ReadStringBuilderWithFixedLines(returnNewLineReader);

@@ -143,31 +143,21 @@
             var index = 0;
             if (isDanglingReturn)
             {
-                if (buffer[index] == '\n')
+                if (buffer[index] != '\n')
                 {
-                    index++;
+                    builder.Append('\n');
                 }
-
-                builder.Append('\n');
             }
 
-            while (true)
+            while (index != bufferLength)
             {
-                if (index == bufferLength)
-                {
-                    break;
-                }
+                var returnIndex = buffer.AsSpan(index, bufferLength - index).IndexOf('\r');
 
-                var message2 = builder.ToString();
-                Debug.WriteLine(message2);
-
-                var returnIndex = buffer.AsSpan(index, bufferLength-index).IndexOf('\r');
-
+                var length = bufferLength - index;
                 // return found at final index
-                isDanglingReturn = returnIndex +index == bufferLength - 1;
+                isDanglingReturn = returnIndex + index == bufferLength - 1;
                 if (isDanglingReturn)
                 {
-                    var length = bufferLength - index;
                     builder.Append(buffer.AsSpan(index, length - 1));
                     break;
                 }
@@ -175,23 +165,25 @@
                 // no return found
                 if (returnIndex == -1)
                 {
-                    builder.Append(buffer.AsSpan(index));
+                    builder.Append(buffer.AsSpan(index, length));
                     break;
                 }
 
                 builder.Append(buffer.AsSpan(index, returnIndex));
-                if(bufferLength > index+returnIndex+1)
+                var nextIndex = returnIndex + 1;
+                var nextBufferIndex = index + nextIndex;
+                if (bufferLength > nextBufferIndex)
                 {
-                    var c = buffer[returnIndex + 1];
-                    if (c != '\n')
+                    var next = buffer[nextBufferIndex];
+                    if (next == '\n')
                     {
-                        builder.Append('\n');
+                        index++;
                     }
+
+                    builder.Append('\n');
                 }
-                index += returnIndex+1;
-                var message = builder.ToString();
-                Debug.Assert(!message.Contains('\r'));
-                Debug.WriteLine(message);
+
+                index += nextIndex;
             }
         }
 
