@@ -129,8 +129,8 @@
         var isDanglingReturn = false;
         while (true)
         {
-            var read = await reader.ReadAsync(memory);
-            if (read == 0)
+            var bufferLength = await reader.ReadAsync(memory);
+            if (bufferLength == 0)
             {
                 if (isDanglingReturn)
                 {
@@ -153,19 +153,21 @@
 
             while (true)
             {
-                if (index == read)
+                if (index == bufferLength)
                 {
                     break;
                 }
 
-                var returnIndex = buffer.AsSpan(index, read).IndexOf('\r');
+                var message2 = builder.ToString();
+                Debug.WriteLine(message2);
 
-                var length = read - index;
+                var returnIndex = buffer.AsSpan(index, bufferLength-index).IndexOf('\r');
 
                 // return found at final index
-                isDanglingReturn = returnIndex == read - 1;
+                isDanglingReturn = returnIndex +index == bufferLength - 1;
                 if (isDanglingReturn)
                 {
+                    var length = bufferLength - index;
                     builder.Append(buffer.AsSpan(index, length - 1));
                     break;
                 }
@@ -173,12 +175,23 @@
                 // no return found
                 if (returnIndex == -1)
                 {
-                    builder.Append(buffer.AsSpan(index, read));
+                    builder.Append(buffer.AsSpan(index));
                     break;
                 }
 
-                builder.Append(buffer.AsSpan(index, length));
-                index += length;
+                builder.Append(buffer.AsSpan(index, returnIndex));
+                if(bufferLength > index+returnIndex+1)
+                {
+                    var c = buffer[returnIndex + 1];
+                    if (c != '\n')
+                    {
+                        builder.Append('\n');
+                    }
+                }
+                index += returnIndex+1;
+                var message = builder.ToString();
+                Debug.Assert(!message.Contains('\r'));
+                Debug.WriteLine(message);
             }
         }
 
