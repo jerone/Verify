@@ -117,11 +117,69 @@
     {
         stream.MoveToStart();
         using var reader = new StreamReader(stream);
-        var contents = await reader.ReadToEndAsync();
-        var builder = new StringBuilder(contents);
-        if (contents.Contains('\r'))
+
+        return await ReadStringBuilderWithFixedLines(reader);
+    }
+
+    internal static async Task<StringBuilder> ReadStringBuilderWithFixedLines(TextReader reader)
+    {
+        var buffer = new char[1024];
+        var memory = buffer.AsMemory();
+        var builder = new StringBuilder();
+        var isDanglingReturn = false;
+        while (true)
         {
-            builder.FixNewlines();
+            var read = await reader.ReadAsync(memory);
+            if (read == 0)
+            {
+                if (isDanglingReturn)
+                {
+                    builder.Append('\n');
+                }
+
+                break;
+            }
+
+            var index = 0;
+            if (isDanglingReturn)
+            {
+                if (buffer[index] == '\n')
+                {
+                    index++;
+                }
+
+                builder.Append('\n');
+            }
+
+            while (true)
+            {
+                if (index == read)
+                {
+                    break;
+                }
+
+                var returnIndex = buffer.AsSpan(index, read).IndexOf('\r');
+
+                var length = read - index;
+
+                // return found at final index
+                isDanglingReturn = returnIndex == read - 1;
+                if (isDanglingReturn)
+                {
+                    builder.Append(buffer.AsSpan(index, length - 1));
+                    break;
+                }
+
+                // no return found
+                if (returnIndex == -1)
+                {
+                    builder.Append(buffer.AsSpan(index, read));
+                    break;
+                }
+
+                builder.Append(buffer.AsSpan(index, length));
+                index += length;
+            }
         }
 
         return builder;
