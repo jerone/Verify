@@ -1,5 +1,22 @@
-﻿public class ReadStringBuilderWithFixedLinesTests
+﻿public class ReadStringBuilderWithFixedLinesTests(ITestOutputHelper output)
 {
+    [Fact]
+    public async Task All()
+    {
+        var solutionDirectory = AttributeReader.GetSolutionDirectory();
+        var startNew = Stopwatch.StartNew();
+        foreach (var file in Directory.EnumerateFiles(
+                     solutionDirectory,
+                     "*.verified.txt",
+                     SearchOption.AllDirectories))
+        {
+            using var reader = File.OpenText(file);
+            await IoHelpers.ReadStringBuilderWithFixedLines(reader);
+        }
+
+        output.WriteLine(startNew.ElapsedMilliseconds + "ms");
+    }
+
     [Theory]
     [InlineData("", "")]
     [InlineData("\t", "\t")]
