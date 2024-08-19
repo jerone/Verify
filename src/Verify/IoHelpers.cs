@@ -113,6 +113,12 @@
     public static long Length(string file) =>
         new FileInfo(file).Length;
 
+    public static async Task<StringBuilder> ReadStringBuilderWithFixedLines(string path)
+    {
+        using var stream = OpenRead(path);
+        return await stream.ReadStringBuilderWithFixedLines();
+    }
+
     public static async Task<StringBuilder> ReadStringBuilderWithFixedLines(this Stream stream)
     {
         stream.MoveToStart();
@@ -266,14 +272,15 @@
 
     public static async Task<StringBuilder> ReadStringBuilder(string path)
     {
+        File.ReadAllText(path);
         using var stream = OpenRead(path);
         using var reader = new StreamReader(stream);
         var pool = ArrayPool<char>.Shared;
         var buffer = pool.Rent(4096);
-        var builder = new StringBuilder();
+        var builder = new StringBuilder((int) stream.Length);
         while (true)
         {
-            var length = await reader.ReadAsync(buffer,0,4096);
+            var length = await reader.ReadAsync(buffer, 0, 4096);
             if (length == 0)
             {
                 break;
