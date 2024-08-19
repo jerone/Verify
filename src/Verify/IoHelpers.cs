@@ -264,10 +264,26 @@
         throw new($"Unable to resolve directory. sourceFile: {sourceFile}");
     }
 
-    public static async Task<StringBuilder> ReadStringBuilderWithFixedLines(string path)
+    public static async Task<StringBuilder> ReadStringBuilder(string path)
     {
         using var stream = OpenRead(path);
-        return await stream.ReadStringBuilderWithFixedLines();
+        using var reader = new StreamReader(stream);
+        var pool = ArrayPool<char>.Shared;
+        var buffer = pool.Rent(4096);
+        var builder = new StringBuilder();
+        while (true)
+        {
+            var length = await reader.ReadAsync(buffer,0,4096);
+            if (length == 0)
+            {
+                break;
+            }
+
+            builder.Append(buffer, 0, length);
+        }
+
+        pool.Return(buffer);
+        return builder;
     }
 
     public static async Task WriteStream(string path, Stream stream)

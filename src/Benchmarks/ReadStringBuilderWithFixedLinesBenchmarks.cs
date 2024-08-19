@@ -13,13 +13,22 @@ public class ReadStringBuilderWithFixedLinesBenchmarks
             .ToList();
     }
 
+    // [Benchmark]
+    // public async Task ReadStringBuilderWithFixedLines()
+    // {
+    //     foreach (var file in files)
+    //     {
+    //         using var reader = IoHelpers.OpenRead(file);
+    //         await IoHelpers.ReadStringBuilderWithFixedLines(reader);
+    //     }
+    // }
+
     [Benchmark]
-    public async Task ReadStringBuilderWithFixedLines()
+    public async Task ReadStringBuilder()
     {
         foreach (var file in files)
         {
-            using var reader = IoHelpers.OpenRead(file);
-            await IoHelpers.ReadStringBuilderWithFixedLines(reader);
+            await IoHelpers.ReadStringBuilder(file);
         }
     }
 }
