@@ -123,7 +123,8 @@
 
     internal static async Task<StringBuilder> ReadStringBuilderWithFixedLines(TextReader reader)
     {
-        var buffer = new char[1024];
+        var pool = ArrayPool<char>.Shared;
+        var buffer = pool.Rent(1024);
         var memory = buffer.AsMemory();
         var builder = new StringBuilder();
         var isDanglingReturn = false;
@@ -186,7 +187,7 @@
                 index += nextIndex;
             }
         }
-
+        pool.Return(buffer);
         return builder;
     }
 
