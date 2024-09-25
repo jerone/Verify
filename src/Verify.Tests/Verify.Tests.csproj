@@ -5,7 +5,8 @@
     <TargetFrameworks>net9.0;net8.0;$(TargetFrameworks)</TargetFrameworks>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <PlatformTarget>x64</PlatformTarget>
-    <NoWarn>$(NoWarn);CS8002</NoWarn>
+    <NoWarn>$(NoWarn);CS8002;xUnit1051</NoWarn>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,15 +14,13 @@
     <PackageReference Include="InfoOf.Fody" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="MarkdownSnippets.MsBuild" PrivateAssets="all" />
-    <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" />
-    <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" />
-    <PackageReference Include="Xunit" />
+    <PackageReference Include="xunit.v3" />
     <PackageReference Include="ProjectDefaults" PrivateAssets="all" />
 
     <ProjectReference Include="..\TargetLibrary\TargetLibrary.csproj" />
     <ProjectReference Include="..\Verify.ClipboardAccept\Verify.ClipboardAccept.csproj" />
     <ProjectReference Include="..\Verify.SamplePlugin\Verify.SamplePlugin.csproj" />
-    <ProjectReference Include="..\Verify.Xunit\Verify.Xunit.csproj" />
+    <ProjectReference Include="..\Verify.XunitV3\Verify.XunitV3.csproj" />
     <ProjectReference Include="..\Verify\Verify.csproj" />
 
     <None Update="sample*.*" CopyToOutputDirectory="PreserveNewest" />
@@ -57,6 +56,6 @@
 
   <Import Project="$(ProjectDir)..\Verify\buildTransitive\Verify.props" />
   <Import Project="$(ProjectDir)..\Verify\buildTransitive\Verify.targets" />
-  <Import Project="$(ProjectDir)..\Verify.Xunit\buildTransitive\Verify.Xunit.props" />
+  <Import Project="$(ProjectDir)..\Verify.XunitV3\buildTransitive\Verify.XunitV3.props" />
 
 </Project>
