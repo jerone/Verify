@@ -1,26 +1,17 @@
-﻿public class StaticFileAppenderTests :
-    IDisposable
+﻿public class StaticFileAppenderTests
 {
-    static AsyncLocal<bool> isInThisTest = new();
-
     [ModuleInitializer]
     public static void Initialize() =>
         VerifierSettings.RegisterFileAppender(
             _ =>
             {
-                if (!isInThisTest.Value)
+                if(TestContext.Current.TestClassInstance is StaticFileAppenderTests)
                 {
-                    return null;
+                    return new("txt", "data");
                 }
 
-                return new("txt", "data");
+                return null;
             });
-
-    public StaticFileAppenderTests() =>
-        isInThisTest.Value = true;
-
-    public void Dispose() =>
-        isInThisTest.Value = false;
 
     [Fact]
     public Task Text() =>

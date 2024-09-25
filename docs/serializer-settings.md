@@ -1788,9 +1788,9 @@ Register a JsonAppender:
 <a id='snippet-RegisterJsonAppender'></a>
 ```cs
 VerifierSettings.RegisterJsonAppender(
-    context =>
+    _ =>
     {
-        if (ShouldInclude(context))
+        if(TestContext.Current.TestClassInstance is JsonAppenderTests)
         {
             return new ToAppend("theData", "theValue");
         }
@@ -1798,7 +1798,7 @@ VerifierSettings.RegisterJsonAppender(
         return null;
     });
 ```
-<sup><a href='/src/Verify.Tests/Converters/JsonAppenderTests.cs#L7-L18' title='Snippet source file'>snippet source</a> | <a href='#snippet-RegisterJsonAppender' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Verify.Tests/Converters/JsonAppenderTests.cs#L5-L16' title='Snippet source file'>snippet source</a> | <a href='#snippet-RegisterJsonAppender' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 When when content is verified:
@@ -1810,7 +1810,7 @@ When when content is verified:
 public Task WithJsonAppender() =>
     Verify("TheValue");
 ```
-<sup><a href='/src/Verify.Tests/Converters/JsonAppenderTests.cs#L30-L36' title='Snippet source file'>snippet source</a> | <a href='#snippet-JsonAppender' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Verify.Tests/Converters/JsonAppenderTests.cs#L18-L24' title='Snippet source file'>snippet source</a> | <a href='#snippet-JsonAppender' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 The content from RegisterJsonAppender will be included in the output:
@@ -1835,7 +1835,7 @@ If the target is a stream or binary file:
 public Task Stream() =>
     Verify(IoHelpers.OpenRead("sample.txt"));
 ```
-<sup><a href='/src/Verify.Tests/Converters/JsonAppenderTests.cs#L64-L70' title='Snippet source file'>snippet source</a> | <a href='#snippet-JsonAppenderStream' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Verify.Tests/Converters/JsonAppenderTests.cs#L52-L58' title='Snippet source file'>snippet source</a> | <a href='#snippet-JsonAppenderStream' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 Then the appended content will be added to the `.verified.txt` file:

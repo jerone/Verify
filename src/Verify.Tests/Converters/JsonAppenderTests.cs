@@ -1,14 +1,12 @@
-﻿public class JsonAppenderTests : IDisposable
+﻿public class JsonAppenderTests
 {
-    static AsyncLocal<bool> isInThisTest = new();
-
     [ModuleInitializer]
     public static void Initialize() =>
     #region RegisterJsonAppender
         VerifierSettings.RegisterJsonAppender(
-            context =>
+            _ =>
             {
-                if (ShouldInclude(context))
+                if(TestContext.Current.TestClassInstance is JsonAppenderTests)
                 {
                     return new ToAppend("theData", "theValue");
                 }
@@ -16,16 +14,6 @@
                 return null;
             });
     #endregion
-
-    // ReSharper disable once UnusedParameter.Local
-    static bool ShouldInclude(IReadOnlyDictionary<string, object> context) =>
-        isInThisTest.Value;
-
-    public JsonAppenderTests() =>
-        isInThisTest.Value = true;
-
-    public void Dispose() =>
-        isInThisTest.Value = false;
 
     #region JsonAppender
 
@@ -80,11 +68,4 @@
     [Fact]
     public Task OnlyJsonAppender() =>
         Verify();
-
-    [Fact]
-    public Task NoJsonAppender()
-    {
-        isInThisTest.Value = false;
-        return Verify();
-    }
 }

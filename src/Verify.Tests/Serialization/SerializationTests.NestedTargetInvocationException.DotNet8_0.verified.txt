@@ -4,7 +4,7 @@
     Message: the message,
     StackTrace:
 at SerializationTests.MethodThatThrows()
-at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+at InvokeStub_SerializationTests.MethodThatThrows(Object, Object, IntPtr*)
 at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
   }
 }
